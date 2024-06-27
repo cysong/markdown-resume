@@ -9,6 +9,7 @@ show_help() {
     echo "  html2pdf       Convert HTML to PDF"
     echo "  md2doc         Convert Markdown to DOCX"
     echo "  md2pdf         Convert Markdown to PDF (via HTML)"
+    echo "  clean          Remove the target directory and all its contents"
     echo "  help           Show this help message"
     echo ""
     echo "If no option is provided, 'md2pdf' will be executed by default."
@@ -28,24 +29,36 @@ check_file_exists() {
     fi
 }
 
+# Ensure target directory exists
+ensure_target_dir() {
+    if [ ! -d "target" ]; then
+        mkdir target
+    fi
+}
+
 # Convert Markdown to HTML
 md2html() {
     local input_file="$1"
-    local output_file="${2}.html"
-    pandoc -s -o "$output_file" -c resume-css-stylesheet.css "$input_file"
+    local output_file="target/${2}.html"
+	local title="${2}"
+    ensure_target_dir
+	cp ./resume-css-stylesheet.css ./target/
+    pandoc -s -o "$output_file" -c resume-css-stylesheet.css --metadata title="$title" "$input_file"
 }
 
 # Convert HTML to PDF
 html2pdf() {
     local input_file="$1"
-    local output_file="${2}.pdf"
+    local output_file="target/${2}.pdf"
+    ensure_target_dir
     wkhtmltopdf --enable-local-file-access "$input_file" "$output_file"
 }
 
 # Convert Markdown to DOCX
 md2doc() {
     local input_file="$1"
-    local output_file="${2}.docx"
+    local output_file="target/${2}.docx"
+    ensure_target_dir
     pandoc -o "$output_file" --reference-doc=resume-docx-reference.docx "$input_file"
 }
 
@@ -54,7 +67,13 @@ md2pdf() {
     local markdown_file="$1"
     local base_name="$2"
     md2html "$markdown_file" "$base_name"
-    html2pdf "${base_name}.html" "$base_name"
+    html2pdf "target/${base_name}.html" "$base_name"
+}
+
+# Clean target directory
+clean_target() {
+    rm -rf target
+    echo "Cleaned target directory."
 }
 
 # Main logic
@@ -70,14 +89,17 @@ case "$option" in
         md2html "$markdown_file" "$base_name"
         ;;
     html2pdf)
-        check_file_exists "${base_name}.html"
-        html2pdf "${base_name}.html" "$base_name"
+        check_file_exists "target/${base_name}.html"
+        html2pdf "target/${base_name}.html" "$base_name"
         ;;
     md2doc)
         md2doc "$markdown_file" "$base_name"
         ;;
     md2pdf|""|" ")
         md2pdf "$markdown_file" "$base_name"
+        ;;
+    clean)
+        clean_target
         ;;
     help)
         show_help
