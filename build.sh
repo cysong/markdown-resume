@@ -42,8 +42,8 @@ md2html() {
     local output_file="target/${2}.html"
 	local title="${2}"
     ensure_target_dir
-	cp ./resume-css-stylesheet.css ./target/
-    pandoc -s -o "$output_file" -c resume-css-stylesheet.css --metadata title="$title" "$input_file"
+	cp style/resume-css-stylesheet.css target/
+    pandoc -s -o "$output_file" -c resume-css-stylesheet.css --metadata pagetitle="$title" "$input_file"
 }
 
 # Convert HTML to PDF
@@ -59,7 +59,7 @@ md2doc() {
     local input_file="$1"
     local output_file="target/${2}.docx"
     ensure_target_dir
-    pandoc -o "$output_file" --reference-doc=resume-docx-reference.docx "$input_file"
+    pandoc -o "$output_file" --reference-doc=style/resume-docx-reference.docx "$input_file"
 }
 
 # Convert Markdown to PDF (via HTML)
