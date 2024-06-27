@@ -8,3 +8,9 @@ Changing the content or styling of a resume or CV is a relatively common event t
 [Markdown](resume.md) . [HTML](resume.html) . [PDF](resume.pdf) . [Word Doc](resume.docx)
 
 [Full work flow details](http://sdsawtelle.github.io/blog/output/simple-markdown-resume-with-pandoc-and-wkhtmltopdf.html) are contained in a short blog post. 
+
+## Changes after fork
+* Add the installing script file install.sh(only for ubuntu system)
+* Add the build script build.sh, you can find the help doc by input `./build.sh help`
+* Move all the output files to target directory and add clean command
+* Other tiny optimizations
