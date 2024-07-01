@@ -42,6 +42,7 @@ md2html() {
     local output_file="target/${2}.html"
 	local title="${2}"
     ensure_target_dir
+	cp -r assets target/
 	cp style/resume-css-stylesheet.css target/
     pandoc -s -o "$output_file" -c resume-css-stylesheet.css --metadata pagetitle="$title" "$input_file"
 }
